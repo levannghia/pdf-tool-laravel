@@ -4,29 +4,46 @@ import DragFileOverlay from '@/components/uploads/DragFileOverlay'
 import FileInput from '@/components/uploads/FileInput'
 import AppLayout from '@/layouts/AppLayout'
 import { useFileStore } from '@/store/user-file-store'
-import {v4 as uuid} from 'uuid'
-import React from 'react'
+import { v4 as uuid } from 'uuid'
+import React, { useEffect, useState } from 'react'
 import { useShallow } from 'zustand/react/shallow'
-import {Upload} from '@/types/upload';
+import { Upload } from '@/types/upload';
 import { useForm } from '@inertiajs/react'
 import useFilePreview from '@/hook/use-file-preview'
+import PdfThumbnailGrid from '@/components/uploads/PdfThumbnailGrid'
 
 function Index() {
-  const {data, setData, post, processing} = useForm<Upload>({
+  const { data, setData, post, processing } = useForm<Upload>({
     files: null,
     token: uuid()
   })
 
-  const {files, onDrag, setOnDrag} = useFileStore(useShallow((state) => ({
+  const [recentlySuccessful, setRecentlySuccessful] = useState(false);
+
+  const { files, onDrag, setOnDrag } = useFileStore(useShallow((state) => ({
     files: state.files,
     onDrag: state.onDrag,
-    setOnDrag: state.onDrag
+    setOnDrag: state.setOnDrag
   })))
 
-  const { onSelectFile } = useFilePreview();
+  const { onSelectFile, handleOnDrop, deleteFile } = useFilePreview({
+    multiple: true,
+    type: "pdf",
+  });
+
+  useEffect(() => {
+    setData("files", files);
+    console.log(files);
+  }, [files]);
+
   return (
     <AppLayout title='Merge PDF Files'>
-      <Warapper>
+      <Warapper
+        onDragEnter={() => setOnDrag(true)}
+        onDragExit={() => setOnDrag(false)}
+        onDragOver={(e) => e.preventDefault()}
+        onDrop={handleOnDrop}
+      >
         <Hero
           title='Merge PDF Files'
           description="Combine PDFs in the order you want with the easiest PDF merger available."
@@ -34,11 +51,12 @@ function Index() {
           dropLabel="or drop PDFs here"
         />
         <FileInput
-        onSelectFile={onSelectFile}
+          onSelectFile={onSelectFile}
           multiple={true}
           accept='application/pdf'
         />
-        <DragFileOverlay onDrag={true}/>
+        <PdfThumbnailGrid files={files} deleteFile={deleteFile} className="btn btn-sky"/>
+        <DragFileOverlay onDrag={onDrag} />
       </Warapper>
     </AppLayout>
   )

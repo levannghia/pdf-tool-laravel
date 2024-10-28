@@ -1,4 +1,5 @@
 import { useFileStore } from '@/store/user-file-store';
+import { Preview } from '@/types/upload';
 import { isImageFile, isPowerpointFile, isWordFile } from '@/utils';
 import { isPdfFile } from 'pdfjs-dist';
 import React, { useCallback } from 'react'
@@ -52,10 +53,33 @@ export default function useFilePreview({ multiple, type }: FilePreviewProps) {
 
     // onSelectFile 
     const onSelectFile = (e: React.ChangeEvent<HTMLInputElement>) => {
-        onSelectOrDropFiles(e.target.files)
+        onSelectOrDropFiles(e.target.files);
     }
 
+    const deleteFile = (file: Preview) => {
+        const updatedFiles = multiple
+            ? files.filter((f) => f.preview !== file.preview)
+            : [];
+
+        setFiles(updatedFiles);
+    };
+
+    const handleOnDrop = (e: React.DragEvent<HTMLDivElement>) => {
+        e.preventDefault();
+        e.stopPropagation();
+
+        const files = e.dataTransfer.files;
+        if (files.length === 0) {
+            return setOnDrag(false);
+        }
+
+        onSelectOrDropFiles(files);
+        setOnDrag(false);
+    };
+
     return {
-        onSelectFile
+        onSelectFile,
+        deleteFile,
+        handleOnDrop,
     }
 }
