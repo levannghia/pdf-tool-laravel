@@ -1,4 +1,4 @@
-import { useFileStore } from '@/store/user-file-store';
+import { useFileStore } from '@/store/use-file-store';
 import { Preview } from '@/types/upload';
 import { isImageFile, isPowerpointFile, isWordFile } from '@/utils';
 import { isPdfFile } from 'pdfjs-dist';

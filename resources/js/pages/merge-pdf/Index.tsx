@@ -3,7 +3,7 @@ import Hero from '@/components/merge-pdf/Hero'
 import DragFileOverlay from '@/components/uploads/DragFileOverlay'
 import FileInput from '@/components/uploads/FileInput'
 import AppLayout from '@/layouts/AppLayout'
-import { useFileStore } from '@/store/user-file-store'
+import { useFileStore } from '@/store/use-file-store'
 import { v4 as uuid } from 'uuid'
 import React, { useEffect, useState } from 'react'
 import { useShallow } from 'zustand/react/shallow'
@@ -11,6 +11,7 @@ import { Upload } from '@/types/upload';
 import { useForm } from '@inertiajs/react'
 import useFilePreview from '@/hook/use-file-preview'
 import PdfThumbnailGrid from '@/components/uploads/PdfThumbnailGrid'
+import Sidebar from '@/components/Sidebar'
 
 function Index() {
   const { data, setData, post, processing } = useForm<Upload>({
@@ -36,6 +37,14 @@ function Index() {
     console.log(files);
   }, [files]);
 
+  const submit: React.FormEventHandler = (e) => {
+    e.preventDefault();
+
+    // post(route("merge_pdf.store"), {
+    //   onSuccess: () => setRecentlySuccessful(true),
+    // });
+  };
+
   return (
     <AppLayout title='Merge PDF Files'>
       <Warapper
@@ -55,7 +64,15 @@ function Index() {
           multiple={true}
           accept='application/pdf'
         />
-        <PdfThumbnailGrid files={files} deleteFile={deleteFile} className="btn btn-sky"/>
+        <PdfThumbnailGrid files={files} deleteFile={deleteFile} className="btn btn-sky" />
+        <Sidebar
+          title="Merge PDF"
+          btn={{
+            title: "Merge PDF",
+            className: "btn btn-sky",
+            onSubmit: submit,
+          }}
+        />
         <DragFileOverlay onDrag={onDrag} />
       </Warapper>
     </AppLayout>

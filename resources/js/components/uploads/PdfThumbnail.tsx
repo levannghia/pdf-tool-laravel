@@ -59,9 +59,7 @@ function PdfThumbnail({ file, pageIndex, onLoad }: PdfThumbnailProps) {
                     <BsArrowClockwise className="animate-spin text-3xl" />
                 </div>
             )}
-        >
-
-        </Viewer>
+        />
     )
 }
 
