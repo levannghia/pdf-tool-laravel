@@ -12,6 +12,7 @@ import { useForm } from '@inertiajs/react'
 import useFilePreview from '@/hook/use-file-preview'
 import PdfThumbnailGrid from '@/components/uploads/PdfThumbnailGrid'
 import Sidebar from '@/components/Sidebar'
+import Uploading from '@/components/uploads/Uploading'
 
 function Index() {
   const { data, setData, post, processing } = useForm<Upload>({
@@ -34,15 +35,19 @@ function Index() {
 
   useEffect(() => {
     setData("files", files);
-    console.log(files);
+    // console.log(files);
   }, [files]);
+
+  useEffect(() => {
+
+  }, [processing])
 
   const submit: React.FormEventHandler = (e) => {
     e.preventDefault();
 
-    // post(route("merge_pdf.store"), {
-    //   onSuccess: () => setRecentlySuccessful(true),
-    // });
+    post(route("merge_pdf.store"), {
+      onSuccess: () => setRecentlySuccessful(true),
+    });
   };
 
   return (
@@ -65,16 +70,18 @@ function Index() {
           accept='application/pdf'
         />
         <PdfThumbnailGrid files={files} deleteFile={deleteFile} className="btn btn-sky" />
-        <Sidebar
-          title="Merge PDF"
-          btn={{
-            title: "Merge PDF",
-            className: "btn btn-sky",
-            onSubmit: submit,
-          }}
-        />
+
         <DragFileOverlay onDrag={onDrag} />
+        {processing && <Uploading token={data.token}/>}
       </Warapper>
+      <Sidebar
+        title="Merge PDF"
+        btn={{
+          title: "Merge PDF",
+          className: "btn btn-sky",
+          onSubmit: submit,
+        }}
+      />
     </AppLayout>
   )
 }

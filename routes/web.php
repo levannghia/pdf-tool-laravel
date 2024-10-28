@@ -10,7 +10,7 @@ use Inertia\Inertia;
 Route::get('/', [HomeController::class, 'index']);
 
 Route::get('/merge-pdf', [MergePdfController::class, 'index'])->name('merge_pdf');
-Route::post('/merge-pdf', fn () => 'merge_pdf')->name('merge_pdf.store');
+Route::post('/merge-pdf', [MergePdfController::class, 'store'])->name('merge_pdf.store');
 Route::get('/split-pdf', fn () => 'merge_pdf')->name('split_pdf');
 Route::post('/split-pdf', fn () => 'merge_pdf')->name('split_pdf.store');
 Route::get('/pdf-to-jpg', fn () => 'merge_pdf')->name('pdf_to_jpg');
