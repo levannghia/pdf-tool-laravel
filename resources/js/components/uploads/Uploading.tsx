@@ -23,7 +23,7 @@ function Uploading({ token }: { token: string }) {
 
     useEffect(() => {
         window.Echo.channel(`upload-processing-${token}`)
-            .listen('TaskProcessing', (data: UploadProcessingResponse) => {
+            .listen('.upload-processing', (data: UploadProcessingResponse) => {
                 console.log(data);
 
                 const { processing, total, file } = data.data;

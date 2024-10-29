@@ -53,7 +53,17 @@ class UploadService {
                 $log->save();
 
                 array_push($uploadedFiles, upload_file($file, $directory));
-                if (config('app.env') === 'local') sleep(3);
+                if (config('app.env') === 'local') sleep(1);
+
+                event(new UploadProcessing(
+                    user: auth()->user(),
+                    token: $token,
+                    data: [
+                        'total' => $log->total,
+                        'processing' => $log->processing < $log->total ? $log->processing + 1 : $log->processing,
+                        'file' => $currentFile
+                    ]
+                ));
             }
 
             return $uploadedFiles;

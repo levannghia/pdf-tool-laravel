@@ -19,15 +19,9 @@ class TaskProcessing implements ShouldBroadcastNow
     /**
      * Create a new event instance.
      */
-    public function __construct(public ?User $user, public string $token, public array $data)
+    public function __construct(public ?User $user, public string $token, public int $percentage)
     {
         //
-    }
-
-    public function broadcastWith(){
-        return [
-            'data' => $this->data
-        ];
     }
 
     /**

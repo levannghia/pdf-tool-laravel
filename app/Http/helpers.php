@@ -38,3 +38,18 @@ if (!function_exists('remove_file')) {
         return false;
     }
 }
+
+if(!function_exists('calculate_percentage')) {
+
+    /**
+     * Summary of calculate_percentage
+     * @param int $total
+     * @param int $processing
+     * @return float|int
+     */
+    function calculate_percentage($total, $processing) {
+        if($total === 0) return 0;
+
+        return round($processing / $total * 100, 2);
+    }
+}

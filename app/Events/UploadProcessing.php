@@ -29,6 +29,12 @@ class UploadProcessing implements ShouldBroadcastNow
      *
      * @return array<int, \Illuminate\Broadcasting\Channel>
      */
+    public function broadcastWith(){
+        return [
+            'data' => $this->data
+        ];
+    }
+
     public function broadcastOn(): array
     {
         return [
