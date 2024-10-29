@@ -53,6 +53,7 @@ class UploadService {
                 $log->save();
 
                 array_push($uploadedFiles, upload_file($file, $directory));
+                if (config('app.env') === 'local') sleep(3);
             }
 
             return $uploadedFiles;
