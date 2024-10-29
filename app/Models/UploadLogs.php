@@ -13,4 +13,16 @@ class UploadLogs extends Model
     public const SUCCESS = 'success';
     public const FAILED = 'failed';
     public const DELETED = 'deleted';
+
+    protected $guarded = ['id'];
+
+    protected $fillable = [
+        'user_id',
+        'token',
+        'total',
+        'processing',
+        'download_path',
+        'status',
+        'service',
+    ];
 }

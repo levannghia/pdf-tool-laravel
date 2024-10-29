@@ -12,6 +12,7 @@
         "inertiajs/inertia-laravel": "^1.0",
         "intervention/image": "^3.9",
         "laravel/framework": "^11.9",
+        "laravel/reverb": "@beta",
         "laravel/sanctum": "^4.0",
         "laravel/tinker": "^2.9",
         "setasign/fpdf": "^1.8",

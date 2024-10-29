@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Events\UploadProcessing;
 use App\Models\UploadLogs;
 
 class UploadService {
@@ -24,6 +25,8 @@ class UploadService {
                 'status' => UploadLogs::PROCESSING
             ]);
 
+            $uploadedFiles = [];
+
             /**
              * @var \Illuminate\Http\UploadedFile $file
              */
@@ -34,9 +37,25 @@ class UploadService {
                     'file_size' => $file->getSize()
                 ];
 
+                if($key == 0) {
+                    event(new UploadProcessing(
+                        user: auth()->user(),
+                        token: $token,
+                        data: [
+                            'total' => $log->total,
+                            'processing' => 1,
+                            'file' => $currentFile
+                        ]
+                    ));
+                }
+
                 $log->increment('processing');
                 $log->save();
+
+                array_push($uploadedFiles, upload_file($file, $directory));
             }
+
+            return $uploadedFiles;
         } catch (\Exception $e) {
             throw new \Exception($e->getMessage());
         }
