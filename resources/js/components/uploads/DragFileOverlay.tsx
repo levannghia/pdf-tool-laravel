@@ -3,11 +3,11 @@ import clsx from 'clsx';
 import React from 'react'
 
 type DragFileOverlayProps = {
-    onDrag: boolean;
+  onDrag: boolean;
 }
 
-function DragFileOverlay({onDrag}: DragFileOverlayProps) {
-  return onDrag && (
+function DragFileOverlay({ onDrag }: DragFileOverlayProps) {
+  return (
     <Transition
       show={onDrag}
       enter="ease-out duration-300"
