@@ -15,8 +15,6 @@ trait Progressable
             token: $this->token,
             percentage: 0
         ));
-
-
     }
 
     public function updateProgress(int $total, int $processing) {
@@ -30,13 +28,13 @@ trait Progressable
     }
 
     public function finishProgress() {
-        UploadLogs::whereToken($this->token)->update([
+        UploadLogs::where('token', $this->token)->update([
             'status' => UploadLogs::SUCCESS
         ]);
 
         event(new TaskProcessedSuccessfully(
             user: $this->user,
-            token: this->token,
+            token: $this->token,
         ));
     }
 
@@ -47,7 +45,7 @@ trait Progressable
 
         event(new TaskProcessingFailed(
             user: $this->user,
-            token: this->token,
+            token: $this->token,
             message: $message
         ));
     }

@@ -13,6 +13,7 @@ import useFilePreview from '@/hook/use-file-preview'
 import PdfThumbnailGrid from '@/components/uploads/PdfThumbnailGrid'
 import Sidebar from '@/components/Sidebar'
 import Uploading from '@/components/uploads/Uploading'
+import Processing from '@/components/uploads/Processing'
 
 function Index() {
   const { data, setData, post, processing } = useForm<Upload>({
@@ -72,7 +73,14 @@ function Index() {
         <PdfThumbnailGrid files={files} deleteFile={deleteFile} className="btn btn-sky" />
 
         <DragFileOverlay onDrag={onDrag} />
-        {processing && <Uploading token={data.token}/>}
+
+        {processing && <Uploading token={data.token} />}
+        
+        {recentlySuccessful &&
+          <Processing
+            token={data.token}
+            setRecentlySuccessful={setRecentlySuccessful} title='Merging PDFs...'
+          />}
       </Warapper>
       <Sidebar
         title="Merge PDF"

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Jobs\MergePdf;
 use App\Providers\RouteServiceProvider;
 use App\Services\UploadService;
 use Illuminate\Http\Request;
@@ -25,7 +26,7 @@ class MergePdfController extends Controller
         }
     }
 
-    public function store (Request $request) {
+    public function store(Request $request) {
         // DB::beginTransaction();
 
         try {
@@ -36,6 +37,12 @@ class MergePdfController extends Controller
                 directory: 'download/merged',
                 service: RouteServiceProvider::MERGE_PDF
             );
+
+            dispatch(new MergePdf(
+                user: auth()->user(),
+                token: $token,
+                files: $files
+            ));
             // DB::commit();
             return to_route(RouteServiceProvider::MERGE_PDF, compact('token'));
         } catch (\Exception $e) {

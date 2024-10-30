@@ -24,6 +24,12 @@ class TaskProcessingFailed implements ShouldBroadcastNow
         //
     }
 
+    public function broadcastWith(){
+        return [
+            'message' => $this->message
+        ];
+    }
+
     /**
      * Get the channels the event should broadcast on.
      *

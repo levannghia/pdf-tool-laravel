@@ -24,6 +24,12 @@ class TaskProcessing implements ShouldBroadcastNow
         //
     }
 
+    public function broadcastWith(){
+        return [
+            'percentage' => $this->percentage
+        ];
+    }
+
     /**
      * Get the channels the event should broadcast on.
      *
