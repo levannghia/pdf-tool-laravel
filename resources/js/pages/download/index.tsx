@@ -1,3 +1,5 @@
+import DownloadSection from '@/components/download/DownloadSection';
+import Services from '@/components/download/Services';
 import Warapper from '@/components/Warapper';
 import AppLayout from '@/layouts/AppLayout';
 import React, { useEffect, useState } from 'react'
@@ -48,11 +50,11 @@ function index({ service, download_path }: { service: string, download_path: str
             <Warapper>
                 <div className="mx-auto w-full max-w-4xl space-y-4 text-center lg:w-1/2">
                     <h1 className="text-4xl font-bold">{title}</h1>
-                    {/* <DownloadSection btnTitle={btnTitle!} downloadPath={download_path} /> */}
+                    <DownloadSection btnTitle={btnTitle!} downloadPath={download_path} />
                 </div>
 
                 <div className="mx-auto w-full space-y-4 rounded-lg bg-background p-4 shadow dark:bg-secondary dark:shadow-black/25 lg:max-w-4xl">
-                    {/* <Services /> */}
+                    <Services />
                 </div>
             </Warapper>
         </AppLayout>

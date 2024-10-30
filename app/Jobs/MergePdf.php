@@ -10,10 +10,9 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
-use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 use setasign\Fpdi\Fpdi;
-use ILluminate\Support\Str;
+use Illuminate\Support\Str;
 
 class MergePdf implements ShouldQueue
 {
@@ -39,7 +38,7 @@ class MergePdf implements ShouldQueue
             foreach ($this->files as $key => $file) {
                 $pageCount = $pdf->setSourceFile(Storage::path($file));
 
-                for ($pageNo = 1; $pageNo <= $pageCount; $pageCount++) {
+                for ($pageNo = 1; $pageNo <= $pageCount; $pageNo++) {
                     $tpl = $pdf->importPage($pageNo);
                     $size = $pdf->getTemplateSize($tpl);
 
@@ -62,6 +61,7 @@ class MergePdf implements ShouldQueue
             $this->finishProgress();
         } catch (\Exception $e) {
             //throw $th;
+            array_map(fn ($file) => remove_file($file), $this->files);
             $this->failedProgress($e->getMessage());
         }
     }
