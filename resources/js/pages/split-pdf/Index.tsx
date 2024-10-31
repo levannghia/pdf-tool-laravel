@@ -14,6 +14,7 @@ import Uploading from '@/components/uploads/Uploading'
 import Processing from '@/components/uploads/Processing'
 import Hero from '@/components/merge-pdf/Hero'
 import SplitOptions from '@/components/split-pdf/SplitOptions'
+import PdfThumbnailRange from '@/components/uploads/PdfThumbnailRange'
 
 function Index() {
     const { data, setData, post, processing } = useForm<Upload & { pages: string }>({
@@ -62,7 +63,7 @@ function Index() {
                     accept="application/pdf"
                 />
 
-                {/* <PdfThumbnailRange file={files[0]} data={data} /> */}
+                <PdfThumbnailRange file={files[0]} data={data} />
 
                 <DragFileOverlay onDrag={onDrag} />
                 {processing && <Uploading token={data.token} />}

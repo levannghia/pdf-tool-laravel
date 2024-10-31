@@ -9,6 +9,8 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
+use Illuminate\Support\Facades\Storage;
+use setasign\Fpdi\Fpdi;
 
 class SplitPdf implements ShouldQueue
 {
@@ -31,9 +33,23 @@ class SplitPdf implements ShouldQueue
     {
         $this->startProgress();
         try {
-            //code...
+            $archivedFiles = [];
+            foreach ($this->files as $key => $file) {
+                $pdfInstance = new Fpdi();
+                $pageCount = $pdfInstance->setSourceFile(Storage::path($file));
+
+                for ($pageNo=1; $pageNo <= $pageCount; $pageNo++) { 
+                    $pages = $this->attributes['pages'];
+                    $selectedPages = [];
+
+                    if($pages == 'all') {
+                        $selectedPages = range(1, $pageCount);
+                    }
+                }
+            }
             $this->finishProgress();
         } catch (\Exception $e) {
+            array_map(fn ($file) => remove_file($file), $this->files);
             $this->failedProgress($e->getMessage());
         }
     }
