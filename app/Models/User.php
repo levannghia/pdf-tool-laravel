@@ -43,9 +43,9 @@ class User extends Authenticatable
         ];
     }
 
-    public function avatar():Attribute {
+    public function avatar(): Attribute {
         return Attribute::make(
-            get: fn (string|null $value) => '/storage' . $value,
+            get: fn (string|null $value) => $value,
             set: fn (string|null $value) => str_replace('/storage', '', $value),
         );
     }

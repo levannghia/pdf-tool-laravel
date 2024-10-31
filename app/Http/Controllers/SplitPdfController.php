@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Jobs\SplitPdf;
 use App\Providers\RouteServiceProvider;
 use App\Services\UploadService;
 use Illuminate\Http\Request;
@@ -33,6 +34,15 @@ class SplitPdfController extends Controller
                 directory: 'download/split',
                 service: RouteServiceProvider::SPLIT_PDF
             );
+
+            dispatch(new SplitPdf(
+                user: auth()->user(),
+                token: $token,
+                files: $files,
+                attributes: $request->only('pages')
+            ));
+
+            return to_route(RouteServiceProvider::SPLIT_PDF, compact('token'));
             
         } catch (\Exception $e) {
             return back()->with([

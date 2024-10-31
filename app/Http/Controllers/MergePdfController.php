@@ -41,7 +41,7 @@ class MergePdfController extends Controller
             dispatch(new MergePdf(
                 user: auth()->user(),
                 token: $token,
-                files: $files
+                files: $files   
             ));
             // DB::commit();
             return to_route(RouteServiceProvider::MERGE_PDF, compact('token'));

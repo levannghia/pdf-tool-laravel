@@ -4,7 +4,7 @@ import AppLayout from '@/layouts/AppLayout'
 import { useFileStore } from '@/store/use-file-store'
 import { Upload } from '@/types/upload'
 import { useForm } from '@inertiajs/react'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useShallow } from 'zustand/react/shallow'
 import { v4 as uuid } from "uuid";
 import Sidebar from '@/components/Sidebar'
@@ -33,11 +33,16 @@ function Index() {
 
     const submit: React.FormEventHandler = (e) => {
         e.preventDefault();
-
         post(route("split_pdf.store"), {
             onSuccess: () => setRecentlySuccessful(true),
         });
     };
+
+    useEffect(() => {
+        setData('files', files);
+    }, [files])
+
+    // console.log(data);
 
     return (
         <AppLayout title='Split PDF File'>

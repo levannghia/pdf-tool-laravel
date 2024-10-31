@@ -2,7 +2,9 @@
 
 namespace App\Jobs;
 
+use App\Models\UploadLogs;
 use App\Models\User;
+use App\Traits\Archivable;
 use App\Traits\Progressable;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
@@ -11,10 +13,11 @@ use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Support\Facades\Storage;
 use setasign\Fpdi\Fpdi;
+use Illuminate\Support\Str;
 
 class SplitPdf implements ShouldQueue
 {
-    use Dispatchable, InteractsWithQueue, Queueable, SerializesModels, Progressable;
+    use Dispatchable, InteractsWithQueue, Queueable, SerializesModels, Progressable, Archivable;
 
     private string $folderPath = '/download/split/';
 
@@ -42,12 +45,53 @@ class SplitPdf implements ShouldQueue
                     $pages = $this->attributes['pages'];
                     $selectedPages = [];
 
-                    if($pages == 'all') {
+                    if ($pages === 'all') {
                         $selectedPages = range(1, $pageCount);
+                    } else {
+                        foreach (explode(',', $pages) as $range) {
+                            $selectedRange = explode('-', $range);
+                            if (count($selectedRange) === 1) {
+                                array_push($selectedPages, $range);
+                            } else {
+                                for ($i = $selectedRange[0]; $i < $selectedRange[1] + 1; $i++) {
+                                    array_push($selectedPages, $i);
+                                }
+                            }
+                        }
                     }
+
+                    if (!in_array($pageNo, $selectedPages)) continue;
+
+                    $pdf = new Fpdi();
+                    $pdf->setSourceFile(Storage::path($file));
+
+                    $tpl = $pdf->importPage($pageNo);
+                    $size = $pdf->getTemplateSize($tpl);
+
+                    $pdf->AddPage($size['width'] > $size['height'] ? 'L' : 'P', [$size['width'], $size['height']]);
+                    $pdf->useTemplate($tpl);
+
+                    $downloadPath = $this->folderPath . Str::uuid() . '.pdf';
+                    $outputPath = Storage::path($downloadPath);
+
+                    $pdf->Output($outputPath, 'F');
+
+                    array_push($archivedFiles, $downloadPath);
+                    
+                    $this->updateProgress(count($this->files), $key + 1);
                 }
+
+                remove_file($file);
             }
-            $this->finishProgress();
+            
+            if ($downloadPath = $this->archive($archivedFiles, $this->folderPath)) {
+                UploadLogs::where('token', $this->token)
+                    ->update([
+                        'download_path' => $downloadPath
+                    ]);
+                
+                $this->finishProgress();
+            }
         } catch (\Exception $e) {
             array_map(fn ($file) => remove_file($file), $this->files);
             $this->failedProgress($e->getMessage());
