@@ -4,6 +4,7 @@ use App\Http\Controllers\DownloadFileController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\MergePdfController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\SplitPdfController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -12,8 +13,8 @@ Route::get('/', [HomeController::class, 'index']);
 
 Route::get('/merge-pdf', [MergePdfController::class, 'index'])->name('merge_pdf');
 Route::post('/merge-pdf', [MergePdfController::class, 'store'])->name('merge_pdf.store');
-Route::get('/split-pdf', fn () => 'merge_pdf')->name('split_pdf');
-Route::post('/split-pdf', fn () => 'merge_pdf')->name('split_pdf.store');
+Route::get('/split-pdf', [SplitPdfController::class, 'index'])->name('split_pdf');
+Route::post('/split-pdf', [SplitPdfController::class, 'store'])->name('split_pdf.store');
 Route::get('/pdf-to-jpg', fn () => 'merge_pdf')->name('pdf_to_jpg');
 Route::post('/pdf-to-jpg', fn () => 'merge_pdf')->name('pdf_to_jpg.store');
 Route::get('/jpg-to-pdf', fn () => 'merge_pdf')->name('jpg_to_pdf');

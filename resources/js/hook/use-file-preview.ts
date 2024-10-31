@@ -27,7 +27,7 @@ export default function useFilePreview({ multiple, type }: FilePreviewProps) {
         const tempErrors: string[] = [];
         const droppedFiles = Array.from(newFiles).filter(({ name }) => {
             if (
-                type === "pdf" && !isPdfFile(name) ||
+                type === 'pdf' && !isPdfFile(name) ||
                 type === 'image' && !isImageFile(name) ||
                 type === 'word' && !isWordFile(name) ||
                 type === 'powerpoint' && !isPowerpointFile(name)

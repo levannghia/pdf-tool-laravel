@@ -1,13 +1,19 @@
-import { HTMLAttributes } from "react";
+import clsx from "clsx";
 
-export default function InputError({
-  message,
-  className = "",
-  ...props
-}: HTMLAttributes<HTMLParagraphElement> & { message?: string }) {
-  return message ? (
-    <p {...props} className={"text-red text-sm " + className}>
+type FormAlertProps = {
+  message: string | React.ReactNode;
+  className?: string;
+};
+
+export default function FormAlert({ message, className }: FormAlertProps) {
+  return (
+    <div
+      className={clsx(
+        "bg-green/25 text-green-dark dark:bg-green/10 rounded-lg px-4 py-3 font-medium",
+        className,
+      )}
+    >
       {message}
-    </p>
-  ) : null;
+    </div>
+  );
 }
