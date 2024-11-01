@@ -14,7 +14,7 @@ class UploadService {
      * @param string $service
      * @return void
      */
-    public function handle(string $token, array $files, string $directory, string $service) {
+    public function handle(string $token, array $files, string $directory, string $service):array {
         try {
             $log = UploadLogs::create([
                 'user_id' => auth()->id(),
