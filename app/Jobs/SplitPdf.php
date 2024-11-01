@@ -41,7 +41,7 @@ class SplitPdf implements ShouldQueue
                 $pdfInstance = new Fpdi();
                 $pageCount = $pdfInstance->setSourceFile(Storage::path($file));
 
-                for ($pageNo=1; $pageNo <= $pageCount; $pageNo++) { 
+                for ($pageNo = 1; $pageNo <= $pageCount; $pageNo++) {
                     $pages = $this->attributes['pages'];
                     $selectedPages = [];
 
@@ -77,23 +77,27 @@ class SplitPdf implements ShouldQueue
                     $pdf->Output($outputPath, 'F');
 
                     array_push($archivedFiles, $downloadPath);
-                    
+
                     $this->updateProgress(count($this->files), $key + 1);
                 }
 
                 remove_file($file);
             }
-            
+
             if ($downloadPath = $this->archive($archivedFiles, $this->folderPath)) {
                 UploadLogs::where('token', $this->token)
                     ->update([
                         'download_path' => $downloadPath
                     ]);
-                
+
+                for ($i = 0; $i < count($archivedFiles); $i++) {
+                    remove_file($archivedFiles[$i]);
+                }
+                // logger("archivedFiles: ", [$archivedFiles]);
                 $this->finishProgress();
             }
         } catch (\Exception $e) {
-            array_map(fn ($file) => remove_file($file), $this->files);
+            array_map(fn($file) => remove_file($file), $this->files);
             $this->failedProgress($e->getMessage());
         }
     }

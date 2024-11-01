@@ -36,7 +36,7 @@ function PdfThumbnailRange({ file, data }: PdfThumbnailRangeProps) {
                         if (ranges.length === 1) {
                             selectedRange.push(start.toString())
                         } else {
-                            for (let i = start; i < end; i++) {
+                            for (let i = start; i < end + 1; i++) {
                                 selectedRange.push(i.toString());
                             }
                         }
