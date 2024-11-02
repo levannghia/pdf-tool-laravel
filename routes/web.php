@@ -1,11 +1,13 @@
 <?php
 
+use App\Http\Controllers\CompressPdfController;
 use App\Http\Controllers\DownloadFileController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\JpgToPdfController;
 use App\Http\Controllers\MergePdfController;
 use App\Http\Controllers\PdfToJpgController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\RotatePdfController;
 use App\Http\Controllers\SplitPdfController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
@@ -21,10 +23,10 @@ Route::get('/pdf-to-jpg', [PdfToJpgController::class, 'index'])->name('pdf_to_jp
 Route::post('/pdf-to-jpg', [PdfToJpgController::class, 'store'])->name('pdf_to_jpg.store');
 Route::get('/jpg-to-pdf', [JpgToPdfController::class, 'index'])->name('jpg_to_pdf');
 Route::post('/jpg-to-pdf', [JpgToPdfController::class, 'store'])->name('jpg_to_pdf.store');
-Route::get('/rotate-pdf', fn () => 'merge_pdf')->name('rotate_pdf');
-Route::post('/rotate-pdf', fn () => 'merge_pdf')->name('rotate_pdf.store');
-Route::get('/compress-pdf', fn () => 'merge_pdf')->name('compress_pdf');
-Route::post('/compress-pdf', fn () => 'merge_pdf')->name('compress_pdf.store');
+Route::get('/rotate-pdf', [RotatePdfController::class, 'index'])->name('rotate_pdf');
+Route::post('/rotate-pdf', [RotatePdfController::class, 'store'])->name('rotate_pdf.store');
+Route::get('/compress-pdf', [CompressPdfController::class, 'index'])->name('compress_pdf');
+Route::post('/compress-pdf', [CompressPdfController::class, 'store'])->name('compress_pdf.store');
 Route::get('/word-to-pdf', fn () => 'merge_pdf')->name('word_to_pdf');
 Route::post('/word-to-pdf', fn () => 'merge_pdf')->name('word_to_pdf.store');
 Route::get('/powerpoint-to-pdf', fn () => 'merge_pdf')->name('powerpoint_to_pdf');
